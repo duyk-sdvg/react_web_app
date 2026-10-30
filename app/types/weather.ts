@@ -8,6 +8,11 @@ export interface WeatherDay {
   tempmax: number;
   tempmin: number;
   temp: number;
+  hours: WeatherHour[];
+}
+
+export interface WeatherHour extends CurrentConditions {
+  precipprob: number;
 }
 
 export interface CurrentConditions {
@@ -16,6 +21,7 @@ export interface CurrentConditions {
   feelslike: number;
   conditions: string;
   icon: string;
+  datetimeEpoch: number;
 }
 
 export interface ApiError {
