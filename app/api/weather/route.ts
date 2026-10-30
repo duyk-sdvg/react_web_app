@@ -9,7 +9,7 @@ export async function GET(request: NextRequest) {
     // console.log(data);
     return NextResponse.json(data);
   } catch (err) {
-    console.log(err)
+    // console.log(err)
     return NextResponse.json({"textErr": "ошибка в getWeather"}, {"status": 500})
   }
 }

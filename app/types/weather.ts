@@ -17,3 +17,7 @@ export interface CurrentConditions {
   conditions: string;
   icon: string;
 }
+
+export interface ApiError {
+  textErr: string;
+}

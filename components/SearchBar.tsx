@@ -1,21 +1,28 @@
+//TODO: стили + обработка ошибок
+export default function SearchBar({
+  onSearch,
+}: {
+  onSearch: (value: string) => void;
+}) {
+  const handleSearch = function (formData:FormData) {
+    let queryCity = formData.get("city")
 
-interface SearchBarProps{
-    
-}
+    if(typeof queryCity === "string") {
+        queryCity = queryCity.trim()
+        if(queryCity.length > 0){
+            onSearch(queryCity)
+        }
+    }    
+  };
 
-
-export default function SearchBar({onClick} : {onClick: (value: string) => void}){
-
-    const handlerClick = function(){
-        
-    }
-
-    return(
-        <div>
-            <label className="w-fit">
-                <input className="bg-amber-700"/>
-            </label>
-            <button type="submit" onClick={handlerClick} className="bg-amber-950">Поиск</button>
-        </div>
-    )
+  return (
+    <form action={handleSearch}>
+      <label className="w-fit">
+        <input name="city" className="bg-amber-700" />
+      </label>
+      <button type="submit" className="bg-amber-950">
+        Поиск
+      </button>
+    </form>
+  );
 }
