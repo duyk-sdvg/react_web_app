@@ -6,13 +6,12 @@ import CurrentWeather from "./CurrentWeather";
 import { ApiError, WeatherHour, WeatherResponse } from "@/app/types/weather";
 import DailyForecast from "./DailyForecast";
 import HourlyForecast from "./HourlyForecast";
+import WeatherIcon from "./WeatherIcon";
 
 export default function WeatherApp() {
   const [weather, setWeather] = useState<WeatherResponse | null>(null);
   const [textErr, setTextErr] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
-
-  
 
   const handleSearch = async function (city: string) {
     const url = `/api/weather?city=${encodeURIComponent(city)}`;
@@ -50,10 +49,9 @@ export default function WeatherApp() {
         />
       )}
       {weather && <DailyForecast weatherByDay={weather.days} />}
-      {weather && <HourlyForecast hoursList={getNext24Hours(weather)}/>}
+      {weather && <HourlyForecast hoursList={getNext24Hours(weather)} />}
 
       {textErr && <p>{textErr}</p>}
-      {isLoading && <p>Загрузка</p>}
     </div>
   );
 }
