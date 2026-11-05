@@ -9,7 +9,7 @@ export default function CurrentWeather({
 }) {
 //   console.log(currentWeather, location);
   return (
-    <div className="w-full h-100 bg-amber-600">
+    <div className="">
         <p>{location}</p>
         <p>{currentWeather.temp}</p>
         <p>{currentWeather.datetime}</p>

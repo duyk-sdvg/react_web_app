@@ -7,14 +7,15 @@ import { ApiError, WeatherHour, WeatherResponse } from "@/app/types/weather";
 import DailyForecast from "./DailyForecast";
 import HourlyForecast from "./HourlyForecast";
 import WeatherIcon from "./WeatherIcon";
+import ButtonLocationSearch from "./ButtonLocationSearch";
 
 export default function WeatherApp() {
   const [weather, setWeather] = useState<WeatherResponse | null>(null);
   const [textErr, setTextErr] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
 
-  const handleSearch = async function (city: string) {
-    const url = `/api/weather?city=${encodeURIComponent(city)}`;
+  const handleSearch = async function (location: string) {
+    const url = `/api/weather?city=${encodeURIComponent(location)}`;
 
     try {
       setIsLoading(true);
@@ -36,12 +37,23 @@ export default function WeatherApp() {
       setIsLoading(false);
     }
   };
+  const handleLocation = function () {
+    navigator.geolocation.getCurrentPosition(function (position) {
+      const latitude = position.coords.latitude;
+      const longitude = position.coords.longitude;
+      handleSearch(`${latitude},${longitude}`)
+      // console.log(latitude, longitude)
+    });
+  };
   //   console.log(textErr)
   // console.log(weather);
 
   return (
-    <div className="mx-40 mt-10">
-      <SearchBar onSearch={handleSearch} />
+    <div className="flex flex-col bg-link mx-3">
+      <div className="flex justify-between">
+        <SearchBar onSearch={handleSearch} />
+        <ButtonLocationSearch onSearch={handleLocation}/>
+      </div>
       {weather && (
         <CurrentWeather
           location={weather.resolvedAddress}
