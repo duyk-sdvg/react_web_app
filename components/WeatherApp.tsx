@@ -8,11 +8,29 @@ import DailyForecast from "./DailyForecast";
 import HourlyForecast from "./HourlyForecast";
 import WeatherIcon from "./WeatherIcon";
 import ButtonLocationSearch from "./ButtonLocationSearch";
+import { getWeatherTheme } from "@/app/utils/getWeatherTheme";
+import { getTimeOfDay } from "@/app/utils/getTimeOfDay";
+import { getBackground } from "@/app/utils/getBackground";
 
 export default function WeatherApp() {
   const [weather, setWeather] = useState<WeatherResponse | null>(null);
   const [textErr, setTextErr] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
+
+  let weatherTheme = "dark";
+  let skyBackground = "var(--sky-rain-night)";
+  if (weather && weather.currentConditions) {
+    const current = weather.currentConditions;
+
+    const timeOfDay = getTimeOfDay(
+      current.datetimeEpoch,
+      current.sunriseEpoch,
+      current.sunsetEpoch,
+    );
+
+    skyBackground = getBackground(current.icon, timeOfDay);
+    weatherTheme = getWeatherTheme(current.icon, timeOfDay.isNight || timeOfDay.isEvening);
+  }
 
   const handleSearch = async function (location: string) {
     const url = `/api/weather?city=${encodeURIComponent(location)}`;
@@ -41,7 +59,7 @@ export default function WeatherApp() {
     navigator.geolocation.getCurrentPosition(function (position) {
       const latitude = position.coords.latitude;
       const longitude = position.coords.longitude;
-      handleSearch(`${latitude},${longitude}`)
+      handleSearch(`${latitude},${longitude}`);
       // console.log(latitude, longitude)
     });
   };
@@ -49,14 +67,19 @@ export default function WeatherApp() {
   // console.log(weather);
 
   return (
-    <div className="flex flex-col bg-link mx-3">
+    <div
+      style={{ backgroundImage: skyBackground }}
+      className="flex min-h-screen flex-col px-3"
+      data-theme={weatherTheme}
+    >
       <div className="flex justify-between">
         <SearchBar onSearch={handleSearch} />
-        <ButtonLocationSearch onSearch={handleLocation}/>
+        <ButtonLocationSearch onSearch={handleLocation} />
       </div>
       {weather && (
         <CurrentWeather
-          location={weather.resolvedAddress}
+          currentDate={weather.days[0].datetime}
+          location={weather.address}
           currentWeather={weather.currentConditions}
         />
       )}

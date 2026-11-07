@@ -1,4 +1,5 @@
 export interface WeatherResponse {
+  address: string;
   resolvedAddress: string;
   days: WeatherDay[];
   currentConditions: CurrentConditions;
@@ -22,6 +23,12 @@ export interface CurrentConditions {
   conditions: string;
   icon: string;
   datetimeEpoch: number;
+  humidity: number;
+  windspeed: number;
+  pressure: number;
+  winddir: number;
+  sunriseEpoch:number;
+  sunsetEpoch: number;
 }
 
 export interface ApiError {
