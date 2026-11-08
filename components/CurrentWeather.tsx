@@ -44,7 +44,7 @@ export default function CurrentWeather({
 
       <div className="flex gap-5 text-xl">
         <p>{currentWeather.conditions}</p>
-        <label className="flex gap-2 text-muted">
+        <label className="flex gap-2 text-sky-muted">
           Ощущается как
           <p>{formateFeelslike}</p>
         </label>

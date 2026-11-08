@@ -69,7 +69,7 @@ export default function WeatherApp() {
   return (
     <div
       style={{ backgroundImage: skyBackground }}
-      className="flex min-h-screen flex-col px-3 gap-15"
+      className="flex min-h-screen flex-col px-80 pt-10 gap-15"
       data-theme={weatherTheme}
     >
       <div className="flex justify-between">
@@ -85,7 +85,7 @@ export default function WeatherApp() {
       )}
 
       {weather && <HourlyForecast hoursList={getNext24Hours(weather)} />}
-      
+
       {weather && <DailyForecast weatherByDay={weather.days} />}
       
 
