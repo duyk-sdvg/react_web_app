@@ -1,6 +1,6 @@
 import { CurrentConditions } from "@/app/types/weather";
 import WeatherIcon from "./WeatherIcon";
-import { MapPin } from "./icons/uiIcons";
+import { DropletIcon, GaugeIcon, MapPin, WindIcon } from "./icons/uiIcons";
 import {
   formatDate,
   formatTemp,
@@ -26,9 +26,9 @@ export default function CurrentWeather({
   const formatePressure = (currentWeather.pressure * 0.75).toFixed(0);
 
   return (
-    <div className="flex flex-col items-center gap-3 text-sky-foreground">
+    <div className="flex flex-col items-center gap-5 text-sky-foreground">
       <div className="flex text-5xl items-center gap-3 ">
-        <MapPin />
+        <MapPin className="size-8"/>
         <p>{formattedLocation}</p>
       </div>
 
@@ -42,25 +42,28 @@ export default function CurrentWeather({
         <p>{formateTemp}</p>
       </div>
 
-      <div className="flex gap-5 text-2xl">
+      <div className="flex gap-5 text-xl">
         <p>{currentWeather.conditions}</p>
-        <label className="flex gap-2">
+        <label className="flex gap-2 text-muted">
           Ощущается как
           <p>{formateFeelslike}</p>
         </label>
       </div>
 
-      <div className="flex gap-4 text-2xl">
-        <div className="flex gap-3 p-2 bg-sky-chip ">
+      <div className="flex gap-4 text-xl text-sky-muted">
+        <div className="flex gap-3 p-2 bg-sky-chip rounded-xl">
+          <WindIcon className="size-7"/>
           <p>{formateWindDir}</p>
           <p>{formateWindSpeed} м/с</p>
         </div>
 
-        <div className="flex gap-3 p-2 bg-sky-chip ">
+        <div className="flex gap-3 p-2 bg-sky-chip rounded-xl">
+          <DropletIcon className="size-7"/>
           <p>{currentWeather.humidity}%</p>
         </div>
 
-        <div className="flex gap-3 p-2 bg-sky-chip ">
+        <div className="flex gap-3 p-2 bg-sky-chip rounded-xl">
+          <GaugeIcon className="size-7"/>
           <p>{formatePressure} мм рт. ст.</p>
         </div>
       </div>
