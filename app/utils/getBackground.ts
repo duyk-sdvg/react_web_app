@@ -1,3 +1,5 @@
+import { getWeatherType } from "./getWeatherType";
+
 export function getBackground(
   icon: string,
   timeOfDay: {
@@ -12,21 +14,7 @@ export function getBackground(
       (key) => timeOfDay[key],
     ) || "isNight";
 
-  let weatherType = "clear";
-
-  const hasPrecipitation =
-    icon.includes("rain") ||
-    icon.includes("showers") ||
-    icon.includes("snow") ||
-    icon.includes("thunder") ||
-    icon === "sleet" ||
-    icon === "hail";
-
-  if (hasPrecipitation) {
-    weatherType = "rain";
-  } else if (icon.includes("cloudy") || icon === "fog") {
-    weatherType = "cloudy";
-  }
+  const weatherType = getWeatherType(icon);
 
   const background: Record<
     typeof weatherType,

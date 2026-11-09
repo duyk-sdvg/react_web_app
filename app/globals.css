@@ -18,20 +18,20 @@
 @import "tailwindcss";
 
 :root {
-  --background: #e9f1fa;          /* фон страницы */
-  --foreground: #10233d;          /* основной текст */
-  --muted: #4e5d73;               /* второстепенный текст */
+  --background: #e9f1fa; /* фон страницы */
+  --foreground: #10233d; /* основной текст */
+  --muted: #4e5d73; /* второстепенный текст */
 
-  --surface: #ffffff;             /* карточки, поле поиска */
-  --surface-muted: #f3f7fc;       /* плитки часов и дней */
-  --surface-hover: #e6eef8;       /* наведение на светлые кнопки и плитки */
-  --border: #c9d6e6;              /* рамки */
+  --surface: #ffffff; /* карточки, поле поиска */
+  --surface-muted: #f3f7fc; /* плитки часов и дней */
+  --surface-hover: #e6eef8; /* наведение на светлые кнопки и плитки */
+  --border: #c9d6e6; /* рамки */
 
-  --primary: #10233d;             /* тёмная кнопка (поиск) */
+  --primary: #10233d; /* тёмная кнопка (поиск) */
   --primary-hover: #1d3a5f;
   --primary-foreground: #ffffff;
 
-  --accent: #f5b301;              /* солнце, фокус */
+  --accent: #f5b301; /* солнце, фокус */
   --accent-hover: #e8a200;
 
   --link: #1f5fcc;
@@ -85,56 +85,70 @@
      morning = утро, day = день, evening = вечер, night = ночь.
      Пример Tailwind: bg-[image:var(--sky-rain-day)]
      Эти переменные только хранят фон: выбор погоды и времени выполняет компонент. */
-  --sky-clear-morning: linear-gradient(165deg,#e9bdc4 0%,#f7d9ba 50%,#edf0e5 100%);
-  --sky-clear-day: linear-gradient(160deg,#7cb7e8,#b4d9f1 55%,#e5f0f5);
-  --sky-clear-evening: linear-gradient(155deg,#4c477e,#b77991 55%,#f4b489);
-  --sky-clear-night: linear-gradient(160deg,#0c1635,#1c3159 65%,#2e456a);
-  --sky-cloudy-morning: linear-gradient(155deg,#b0b8c8,#d9d5d8 60%,#e7ddd2);
-  --sky-cloudy-day: linear-gradient(160deg,#9eafc3,#c5d2df 60%,#e2e9f0);
-  --sky-cloudy-evening: linear-gradient(160deg,#515b78,#85849b 60%,#ba9ea5);
-  --sky-cloudy-night: linear-gradient(160deg,#172239,#303e56 65%,#46546a);
-  --sky-rain-morning: linear-gradient(160deg,#596b82,#8898aa 60%,#b4bcc6);
-  --sky-rain-day: linear-gradient(155deg,#3d536c 0%,#607c95 48%,#a4b5c5 100%);
-  --sky-rain-evening: linear-gradient(160deg,#39405b,#62637e 65%,#8a7c90);
-  --sky-rain-night: linear-gradient(160deg,#0e192b,#25354b 60%,#3c4b63);
+  --sky-clear-morning: linear-gradient(
+    165deg,
+    #e9bdc4 0%,
+    #f7d9ba 50%,
+    #edf0e5 100%
+  );
+  --sky-clear-day: linear-gradient(160deg, #7cb7e8, #b4d9f1 55%, #e5f0f5);
+  --sky-clear-evening: linear-gradient(155deg, #4c477e, #b77991 55%, #f4b489);
+  --sky-clear-night: linear-gradient(160deg, #0c1635, #1c3159 65%, #2e456a);
+  --sky-cloudy-morning: linear-gradient(155deg, #b0b8c8, #d9d5d8 60%, #e7ddd2);
+  --sky-cloudy-day: linear-gradient(160deg, #9eafc3, #c5d2df 60%, #e2e9f0);
+  --sky-cloudy-evening: linear-gradient(160deg, #515b78, #85849b 60%, #ba9ea5);
+  --sky-cloudy-night: linear-gradient(160deg, #172239, #303e56 65%, #46546a);
+  --sky-rain-morning: linear-gradient(160deg, #596b82, #8898aa 60%, #b4bcc6);
+  --sky-rain-day: linear-gradient(
+    155deg,
+    #3d536c 0%,
+    #607c95 48%,
+    #a4b5c5 100%
+  );
+  --sky-rain-evening: linear-gradient(160deg, #39405b, #62637e 65%, #8a7c90);
+  --sky-rain-night: linear-gradient(160deg, #0e192b, #25354b 60%, #3c4b63);
 
   /* Фоны декоративных слоёв: использовать как background-image. */
-  --sky-sun-glow-gradient: radial-gradient(circle, var(--sky-sun-glow), transparent 66%);
-  --sky-horizon-gradient: radial-gradient(ellipse at 80% 100%, var(--sky-horizon-glow), transparent 70%);
+  --sky-sun-glow-gradient: radial-gradient(
+    circle,
+    var(--sky-sun-glow),
+    transparent 66%
+  );
+  --sky-horizon-gradient: radial-gradient(
+    ellipse at 80% 100%,
+    var(--sky-horizon-glow),
+    transparent 70%
+  );
   --sky-rain-gradient: linear-gradient(transparent, var(--sky-rain-drop));
-
 }
 
 :root,
 [data-theme="light"] {
-
   /* Текст и небольшие плашки на светлом небе. */
   --sky-foreground: #10233d;
   --sky-muted: #40546d;
   --sky-chip: #ffffff40;
 
-  
-  --icon-sun: #E8A200;
-  --icon-moon: #6B5FD3;
-  --icon-cloud: #6B7A90;
-  --icon-rain: #2F6FDE;
-  --icon-snow: #4FA3E0;
-  --icon-lightning: #F08A24;
+  --icon-sun: #e8a200;
+  --icon-moon: #6b5fd3;
+  --icon-cloud: #6b7a90;
+  --icon-rain: #2f6fde;
+  --icon-snow: #4fa3e0;
+  --icon-lightning: #f08a24;
 }
 
 [data-theme="dark"] {
-
   /* Текст и небольшие плашки на тёмном небе. */
   --sky-foreground: #ffffff;
   --sky-muted: #e0e9f3;
   --sky-chip: #ffffff18;
 
-  --icon-sun: #FFC53D;
-  --icon-moon: #F3E7BF;
-  --icon-cloud: #E3E9F1;
-  --icon-rain: #7FB2FF;
-  --icon-snow: #BFE3FF;
-  --icon-lightning: #FFA24D;
+  --icon-sun: #ffc53d;
+  --icon-moon: #f3e7bf;
+  --icon-cloud: #e3e9f1;
+  --icon-rain: #7fb2ff;
+  --icon-snow: #bfe3ff;
+  --icon-lightning: #ffa24d;
 }
 
 @theme inline {
@@ -197,6 +211,25 @@
 
   --font-sans: var(--font-manrope), system-ui, sans-serif;
   --font-display: var(--font-unbounded, var(--font-manrope, sans-serif));
+}
+
+@keyframes rain-fall {
+  from {
+    transform: translate(0, 0) skewX(-15deg);
+  }
+  to {
+    transform: translate(-268px, calc(100vh + 100px)) skewX(-15deg);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .rain-drop {
+    display: none;
+  }
+}
+
+.rain-drop{
+  animation: rain-fall 1s linear infinite;
 }
 
 body {

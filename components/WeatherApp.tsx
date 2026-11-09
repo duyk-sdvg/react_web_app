@@ -11,6 +11,8 @@ import ButtonLocationSearch from "./ButtonLocationSearch";
 import { getWeatherTheme } from "@/app/utils/getWeatherTheme";
 import { getTimeOfDay } from "@/app/utils/getTimeOfDay";
 import { getBackground } from "@/app/utils/getBackground";
+import WeatherBackground from "./WeatherBackground";
+import { getWeatherType } from "@/app/utils/getWeatherType";
 
 export default function WeatherApp() {
   const [weather, setWeather] = useState<WeatherResponse | null>(null);
@@ -19,17 +21,27 @@ export default function WeatherApp() {
 
   let weatherTheme = "dark";
   let skyBackground = "var(--sky-rain-night)";
+  let timeOfDay = {
+    isNight: true,
+    isDay: false,
+    isMorning: false,
+    isEvening: false,
+  };
+  let curWeatherIcon ="clear-day"
   if (weather && weather.currentConditions) {
     const current = weather.currentConditions;
-
-    const timeOfDay = getTimeOfDay(
+    curWeatherIcon = current.icon
+    timeOfDay = getTimeOfDay(
       current.datetimeEpoch,
       current.sunriseEpoch,
       current.sunsetEpoch,
     );
 
-    skyBackground = getBackground(current.icon, timeOfDay);
-    weatherTheme = getWeatherTheme(current.icon, timeOfDay.isNight || timeOfDay.isEvening);
+    skyBackground = getBackground(curWeatherIcon, timeOfDay);
+    weatherTheme = getWeatherTheme(
+      curWeatherIcon,
+      timeOfDay.isNight || timeOfDay.isEvening,
+    );
   }
 
   const handleSearch = async function (location: string) {
@@ -68,28 +80,31 @@ export default function WeatherApp() {
 
   return (
     <div
-      style={{ backgroundImage: skyBackground }}
-      className="flex min-h-screen flex-col px-80 pt-10 gap-15"
+      // style={{ backgroundImage: skyBackground }}
+      className="relative isolate min-h-screen"
       data-theme={weatherTheme}
     >
-      <div className="flex justify-between">
-        <SearchBar onSearch={handleSearch} />
-        <ButtonLocationSearch onSearch={handleLocation} />
+      <WeatherBackground skyBackground={skyBackground} timeOfDay={timeOfDay} weatherType={getWeatherType(curWeatherIcon)}/>
+
+      <div className="flex flex-col px-80 pt-10 gap-15 relative z-10">
+        <div className="flex justify-between">
+          <SearchBar onSearch={handleSearch} />
+          <ButtonLocationSearch onSearch={handleLocation} />
+        </div>
+        {weather && (
+          <CurrentWeather
+            currentDate={weather.days[0].datetime}
+            location={weather.address}
+            currentWeather={weather.currentConditions}
+          />
+        )}
+
+        {weather && <HourlyForecast hoursList={getNext24Hours(weather)} />}
+
+        {weather && <DailyForecast weatherByDay={weather.days} />}
+
+        {textErr && <p>{textErr}</p>}
       </div>
-      {weather && (
-        <CurrentWeather
-          currentDate={weather.days[0].datetime}
-          location={weather.address}
-          currentWeather={weather.currentConditions}
-        />
-      )}
-
-      {weather && <HourlyForecast hoursList={getNext24Hours(weather)} />}
-
-      {weather && <DailyForecast weatherByDay={weather.days} />}
-      
-
-      {textErr && <p>{textErr}</p>}
     </div>
   );
 }
