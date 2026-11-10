@@ -73,7 +73,7 @@ export default function HourlyForecast({
             <p className="text-xl text-sky-muted">
               {hour.datetime.slice(0, 5)}
             </p>
-            <WeatherIcon description={hour.icon} className="size-15" />
+            <WeatherIcon description={hour.icon} className="size-17" />
             <p className="text-xl font-bold text-sky-foreground">
               {formatTemp(hour.temp)}
             </p>

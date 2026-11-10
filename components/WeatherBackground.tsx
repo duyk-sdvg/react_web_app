@@ -17,13 +17,16 @@ export default function WeatherBackground({
   return (
     <div
       aria-hidden="true"
-      style={{ backgroundImage: skyBackground }}
+      style={{
+        backgroundImage: `var(--sky-horizon-gradient), ${skyBackground}`,
+      }}
       className="absolute inset-0 overflow-hidden pointer-events-none "
     >
       {timeOfDay.isNight &&
         (weatherType === "clear" || weatherType === "cloudy") && <Stars />}
       {(weatherType === "cloudy" || weatherType === "rain") && <Clouds />}
       {weatherType === "rain" && <Rain />}
+      {weatherType === "clear" && !timeOfDay.isNight && <SunGlow />}
     </div>
   );
 }
@@ -85,6 +88,19 @@ function Rain() {
         ></div>
       ))}
     </div>
+  );
+}
+
+function SunGlow() {
+  return (
+    <div
+      className="absolute bg-(image:--sky-sun-glow-gradient) size-130"
+      style={{
+        left: "75%",
+        top: "-100px",
+        transform: "translateX(-50%)",
+      }}
+    ></div>
   );
 }
 

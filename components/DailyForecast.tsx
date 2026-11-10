@@ -1,17 +1,60 @@
-import { WeatherDay } from "@/app/types/weather";
+"use client";
 
-export default function DailyForecast({weatherByDay} : {weatherByDay:WeatherDay[]}){
-    // console.log(weatherByDay)
-    return(
-        <div className="flex gap-3">
-            {weatherByDay.map((day) => (
-                <div key={day.datetime}>
-                    <p>{day.datetime}</p>
-                    <p>{day.temp}</p>
-                    <p>{day.tempmax}</p>
-                    <p>{day.tempmin}</p>
-                </div>
-            ))}
+import { WeatherDay } from "@/app/types/weather";
+import { formatDate, formatTemp } from "@/app/utils/format";
+import { ArrowIcon } from "./icons/uiIcons";
+import { useRef } from "react";
+import WeatherIcon from "./WeatherIcon";
+
+export default function DailyForecast({
+  weatherByDay,
+}: {
+  weatherByDay: WeatherDay[];
+}) {
+  const scrollingRef = useRef<HTMLDivElement | null>(null);
+
+  const handleClick = function (distance: number) {
+    scrollingRef.current?.scrollBy({ left: distance, behavior: "smooth" });
+  };
+  console.log(weatherByDay)
+  return (
+    <div
+      className="flex flex-col gap-4 bg-surface rounded-2xl px-5 py-4 border border-border"
+      data-theme="light"
+    >
+      <div className="flex justify-between">
+        <h2 className="text-2xl text-sky-foreground font-bold">По дням</h2>
+        <div className="flex gap-2">
+          <button
+            className="p-2 rounded-full border border-border hover:bg-surface-hover transition-transform active:translate-y-0.5"
+            onClick={() => handleClick(-300)}
+          >
+            <ArrowIcon />
+          </button>
+          <button
+            className="p-2 border border-border rounded-full hover:bg-surface-hover transition-transform active:translate-y-0.5"
+            onClick={() => handleClick(300)}
+          >
+            <ArrowIcon className="rotate-180" />
+          </button>
         </div>
-    )
+      </div>
+      <div className="flex gap-3 text-sky-foreground pb-4 w-full overflow-x-auto select-none cursor-grab active:cursor-grabbing" ref={scrollingRef}>
+        {weatherByDay.map((day) => (
+          <div
+            key={day.datetime}
+            className="bg-surface-muted flex flex-col gap-1 p-2 rounded-2xl border border-border items-center hover:bg-surface-hover "
+          >
+            <p className="text-xl text-sky-muted">{formatDate(day.datetime)}</p>
+            <WeatherIcon description={day.icon} className="size-17"/>
+            {/* <p>{formatTemp(day.temp)}</p> */}
+            <div className="flex gap-2.5 text-xl">
+                <p className="font-bold text-sky-foreground">{formatTemp(day.tempmax)}</p>
+                <p className="font-bold text-sky-muted">{formatTemp(day.tempmin)}</p>
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
 }

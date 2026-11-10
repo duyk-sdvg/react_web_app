@@ -9,6 +9,7 @@ export interface WeatherDay {
   tempmax: number;
   tempmin: number;
   temp: number;
+  icon: string;
   hours: WeatherHour[];
 }
 
@@ -27,7 +28,7 @@ export interface CurrentConditions {
   windspeed: number;
   pressure: number;
   winddir: number;
-  sunriseEpoch:number;
+  sunriseEpoch: number;
   sunsetEpoch: number;
 }
 

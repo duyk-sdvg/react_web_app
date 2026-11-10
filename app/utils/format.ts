@@ -7,7 +7,7 @@ export function formatTemp(temp: number) {
   if (temp > 0) return "+" + temp.toString() + "°";
   return temp.toString() + "°";
 }
-
+ 
 export function formatWindDirection(windDirection: number) {
   if (windDirection >= 337 || windDirection < 22) return "C";
   if (windDirection >= 22 && windDirection < 67) return "СВ";
