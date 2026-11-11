@@ -37,7 +37,7 @@ export default function CurrentWeather({
         <p>{formateTime}</p>
       </div>
 
-      <div className="flex gap-6 text-8xl ">
+      <div className="flex gap-6 text-8xl font-display">
         <WeatherIcon description={currentWeather.icon} className="size-25" />
         <p>{formateTemp}</p>
       </div>

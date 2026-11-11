@@ -11,12 +11,15 @@ export default function DailyForecast({
 }: {
   weatherByDay: WeatherDay[];
 }) {
+  const isPress = useRef(false);
+  const coordsPointer = useRef(0);
+  const positionContainer = useRef(0);
   const scrollingRef = useRef<HTMLDivElement | null>(null);
 
   const handleClick = function (distance: number) {
     scrollingRef.current?.scrollBy({ left: distance, behavior: "smooth" });
   };
-  console.log(weatherByDay)
+  console.log(weatherByDay);
   return (
     <div
       className="flex flex-col gap-4 bg-surface rounded-2xl px-5 py-4 border border-border"
@@ -39,18 +42,44 @@ export default function DailyForecast({
           </button>
         </div>
       </div>
-      <div className="flex gap-3 text-sky-foreground pb-4 w-full overflow-x-auto select-none cursor-grab active:cursor-grabbing" ref={scrollingRef}>
+      <div
+        className="flex gap-3 text-sky-foreground pb-4 w-full overflow-x-auto select-none cursor-grab active:cursor-grabbing"
+        ref={scrollingRef}
+        onPointerDown={(e) => {
+          if (e.pointerType !== "mouse") return;
+          if (scrollingRef.current) {
+            isPress.current = true;
+            coordsPointer.current = e.clientX;
+            positionContainer.current = scrollingRef.current.scrollLeft;
+            scrollingRef.current.setPointerCapture(e.pointerId);
+          }
+        }}
+        onPointerMove={(e) => {
+          if (isPress.current && scrollingRef.current) {
+            const diff = e.clientX - coordsPointer.current;
+            const newCoord = positionContainer.current - diff;
+            scrollingRef.current.scrollLeft = newCoord;
+          }
+        }}
+        onPointerUp={() => (isPress.current = false)}
+        onPointerCancel={() => (isPress.current = false)}
+        onLostPointerCapture={() => (isPress.current = false)}
+      >
         {weatherByDay.map((day) => (
           <div
             key={day.datetime}
             className="bg-surface-muted flex flex-col gap-1 p-2 rounded-2xl border border-border items-center hover:bg-surface-hover "
           >
             <p className="text-xl text-sky-muted">{formatDate(day.datetime)}</p>
-            <WeatherIcon description={day.icon} className="size-17"/>
+            <WeatherIcon description={day.icon} className="size-17" />
             {/* <p>{formatTemp(day.temp)}</p> */}
             <div className="flex gap-2.5 text-xl">
-                <p className="font-bold text-sky-foreground">{formatTemp(day.tempmax)}</p>
-                <p className="font-bold text-sky-muted">{formatTemp(day.tempmin)}</p>
+              <p className="font-bold text-sky-foreground">
+                {formatTemp(day.tempmax)}
+              </p>
+              <p className="font-bold text-sky-muted">
+                {formatTemp(day.tempmin)}
+              </p>
             </div>
           </div>
         ))}
