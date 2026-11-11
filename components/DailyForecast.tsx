@@ -19,7 +19,6 @@ export default function DailyForecast({
   const handleClick = function (distance: number) {
     scrollingRef.current?.scrollBy({ left: distance, behavior: "smooth" });
   };
-  console.log(weatherByDay);
   return (
     <div
       className="flex flex-col gap-4 bg-surface rounded-2xl px-5 py-4 border border-border"
@@ -72,7 +71,6 @@ export default function DailyForecast({
           >
             <p className="text-xl text-sky-muted">{formatDate(day.datetime)}</p>
             <WeatherIcon description={day.icon} className="size-17" />
-            {/* <p>{formatTemp(day.temp)}</p> */}
             <div className="flex gap-2.5 text-xl">
               <p className="font-bold text-sky-foreground">
                 {formatTemp(day.tempmax)}
