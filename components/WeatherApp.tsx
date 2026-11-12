@@ -78,19 +78,21 @@ export default function WeatherApp() {
   };
 
   return (
-    <div className="relative isolate min-h-screen" data-theme={weatherTheme}>
+    <div
+      className="relative flex justify-center isolate min-h-screen p-3"
+      data-theme={weatherTheme}
+    >
       <WeatherBackground
         skyBackground={skyBackground}
         timeOfDay={timeOfDay}
         weatherType={getWeatherType(curWeatherIcon)}
       />
-
-      <div className="flex flex-col px-80 pt-10 gap-15 relative z-10">
-        <div className="flex justify-between">
+      <div className="flex flex-col max-w-290 md:pt-10 gap-15 relative z-10 min-w-0">
+        <div className="flex flex-col gap-5 md:flex-row md:justify-between items-center">
           <SearchBar onSearch={handleSearch} />
           <ButtonLocationSearch onSearch={handleLocation} />
         </div>
-        {!isLoading &&  weather && (
+        {!isLoading && weather && (
           <CurrentWeather
             currentDate={weather.days[0].datetime}
             location={weather.address}
@@ -98,14 +100,15 @@ export default function WeatherApp() {
           />
         )}
 
-        {!isLoading && weather && <HourlyForecast hoursList={getNext24Hours(weather)} />}
+        {!isLoading && weather && (
+          <HourlyForecast hoursList={getNext24Hours(weather)} />
+        )}
 
         {!isLoading && weather && <DailyForecast weatherByDay={weather.days} />}
 
         {textErr && <p>{textErr}</p>}
 
         {isLoading && <LoadScreen />}
-
       </div>
     </div>
   );

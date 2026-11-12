@@ -67,7 +67,7 @@ export default function DailyForecast({
         {weatherByDay.map((day) => (
           <div
             key={day.datetime}
-            className="bg-surface-muted flex flex-col gap-1 p-2 rounded-2xl border border-border items-center hover:bg-surface-hover "
+            className="bg-surface-muted flex flex-col gap-1 p-2 rounded-2xl border border-border items-center hover:bg-surface-hover min-w-38"
           >
             <p className="text-xl text-sky-muted">{formatDate(day.datetime)}</p>
             <WeatherIcon description={day.icon} className="size-17" />

@@ -37,12 +37,12 @@ export default function CurrentWeather({
         <p>{formateTime}</p>
       </div>
 
-      <div className="flex gap-6 text-8xl font-display">
-        <WeatherIcon description={currentWeather.icon} className="size-25" />
-        <p>{formateTemp}</p>
+      <div className="flex gap-6 md:text-8xl text-7xl  font-display">
+        <WeatherIcon description={currentWeather.icon} className="md:size-29 size-25" />
+        <p className="flex items-center">{formateTemp}</p>
       </div>
 
-      <div className="flex gap-5 text-xl">
+      <div className="flex gap-5 md:text-xl text-sm">
         <p>{currentWeather.conditions}</p>
         <label className="flex gap-2 text-sky-muted">
           Ощущается как
@@ -50,20 +50,20 @@ export default function CurrentWeather({
         </label>
       </div>
 
-      <div className="flex gap-4 text-xl text-sky-muted">
-        <div className="flex gap-3 p-2 bg-sky-chip rounded-xl">
-          <WindIcon className="size-7"/>
+      <div className="flex gap-4 md:text-xl text-sm text-sky-muted">
+        <div className="flex md:gap-3 gap-1 p-2 bg-sky-chip rounded-xl">
+          <WindIcon className="md:size-7 size-5"/>
           <p>{formateWindDir}</p>
           <p>{formateWindSpeed} м/с</p>
         </div>
 
-        <div className="flex gap-3 p-2 bg-sky-chip rounded-xl">
-          <DropletIcon className="size-7"/>
+        <div className="flex md:gap-3 gap-1 p-2 bg-sky-chip rounded-xl">
+          <DropletIcon className="md:size-7 size-5"/>
           <p>{currentWeather.humidity}%</p>
         </div>
 
-        <div className="flex gap-3 p-2 bg-sky-chip rounded-xl">
-          <GaugeIcon className="size-7"/>
+        <div className="flex md:gap-3 gap-1 p-2 bg-sky-chip rounded-xl">
+          <GaugeIcon className="md:size-7 size-5"/>
           <p>{formatePressure} мм рт. ст.</p>
         </div>
       </div>

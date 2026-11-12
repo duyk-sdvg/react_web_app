@@ -18,14 +18,15 @@ export default function SearchBar({
   };
 
   return (
-    <form action={handleSearch} className=" w-fit bg-surface pl-4 py-1 pr-1.5 rounded-xl">
+    <form action={handleSearch} className="flex justify-between md:w-fit min-w-fit bg-surface pl-4 py-1 pr-1.5 rounded-xl">
       <label className="text-foreground flex items-center gap-3">
         <MapPin />
         <input name="city" className="outline-none" placeholder="Найти город"/>
+        </label>
         <button type="submit" className="text-primary-foreground bg-primary hover:bg-primary-hover p-2.5 rounded-xl transition-transform active:translate-y-0.5">
           <SearchIcon />
         </button>
-      </label>
+      
     </form>
   );
 }
