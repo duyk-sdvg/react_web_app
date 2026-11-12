@@ -3,10 +3,9 @@
 import { useRef, useState } from "react";
 import SearchBar from "./SearchBar";
 import CurrentWeather from "./CurrentWeather";
-import { ApiError, WeatherHour, WeatherResponse } from "@/app/types/weather";
+import { ApiError, WeatherResponse } from "@/app/types/weather";
 import DailyForecast from "./DailyForecast";
 import HourlyForecast from "./HourlyForecast";
-import WeatherIcon from "./WeatherIcon";
 import ButtonLocationSearch from "./ButtonLocationSearch";
 import { getWeatherTheme } from "@/app/utils/getWeatherTheme";
 import { getTimeOfDay } from "@/app/utils/getTimeOfDay";
@@ -15,12 +14,14 @@ import WeatherBackground from "./WeatherBackground";
 import { getWeatherType } from "@/app/utils/getWeatherType";
 import { getNext24Hours } from "@/app/utils/getNext24HoursWeather";
 import { LoadScreen } from "./LoadScreen";
+import { DialogErr } from "./DialogErr";
 
 export default function WeatherApp() {
   const [weather, setWeather] = useState<WeatherResponse | null>(null);
   const [textErr, setTextErr] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
-  const errDialogref = useRef<null | HTMLDialogElement>(null)
+  const errCode = useRef(0);
+  const errDialogref = useRef<null | HTMLDialogElement>(null);
 
   let weatherTheme = "dark";
   let skyBackground = "var(--sky-rain-night)";
@@ -74,10 +75,11 @@ export default function WeatherApp() {
     navigator.geolocation.getCurrentPosition(getPosition, errPosition);
   };
 
-  const errPosition = function(err:GeolocationPositionError){
-    errDialogref.current?.showModal()
-    console.log(`ERROR(${err.code}): ${err.message}`);
-  }
+  const errPosition = function (err: GeolocationPositionError) {
+    errDialogref.current?.showModal();
+    errCode.current = err.code;
+    // console.log(`ERROR(${err.code}): ${err.message}`);
+  };
 
   const getPosition = function (position: GeolocationPosition) {
     const latitude = position.coords.latitude;
@@ -120,15 +122,9 @@ export default function WeatherApp() {
         {textErr && <p>{textErr}</p>}
 
         {isLoading && <LoadScreen />}
-        
-        <dialog className=" m-auto p-3 open:flex flex-col gap-2 rounded-2xl border border-border bg-surface-muted" ref={errDialogref}>
-          <p>Геолокация запрещена, разрешите ее в настройках</p>
-          <button onClick={() => errDialogref.current?.close()} className="bg-primary hover:bg-primary-hover p-2 rounded-xl text-primary-foreground">Понятно</button>
-        </dialog>
-        
+
+        <DialogErr errDialogref={errDialogref} errCode={errCode.current} />
       </div>
     </div>
   );
 }
-
-
