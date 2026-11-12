@@ -2,9 +2,11 @@ import { MapPin, SearchIcon } from "./icons/uiIcons";
 
 //TODO: стили + обработка ошибок
 export default function SearchBar({
+  isDisabled,
   onSearch,
 }: {
   onSearch: (value: string) => void;
+  isDisabled: boolean
 }) {
   const handleSearch = function (formData: FormData) {
     let queryCity = formData.get("city");
@@ -23,7 +25,7 @@ export default function SearchBar({
         <MapPin />
         <input name="city" className="outline-none" placeholder="Найти город"/>
         </label>
-        <button type="submit" className="text-primary-foreground bg-primary hover:bg-primary-hover p-2.5 rounded-xl transition-transform active:translate-y-0.5">
+        <button type="submit" disabled={isDisabled} className={`text-primary-foreground bg-primary p-2.5 rounded-xl transition-transform ${isDisabled ? "" :"hover:bg-primary-hover active:translate-y-0.5"}`}>
           <SearchIcon />
         </button>
       

@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useRef, useState } from "react";
 import SearchBar from "./SearchBar";
 import CurrentWeather from "./CurrentWeather";
 import { ApiError, WeatherHour, WeatherResponse } from "@/app/types/weather";
@@ -20,6 +20,7 @@ export default function WeatherApp() {
   const [weather, setWeather] = useState<WeatherResponse | null>(null);
   const [textErr, setTextErr] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
+  const errDialogref = useRef<null | HTMLDialogElement>(null)
 
   let weatherTheme = "dark";
   let skyBackground = "var(--sky-rain-night)";
@@ -70,11 +71,18 @@ export default function WeatherApp() {
     }
   };
   const handleLocation = function () {
-    navigator.geolocation.getCurrentPosition(function (position) {
-      const latitude = position.coords.latitude;
-      const longitude = position.coords.longitude;
-      handleSearch(`${latitude},${longitude}`);
-    });
+    navigator.geolocation.getCurrentPosition(getPosition, errPosition);
+  };
+
+  const errPosition = function(err:GeolocationPositionError){
+    errDialogref.current?.showModal()
+    console.log(`ERROR(${err.code}): ${err.message}`);
+  }
+
+  const getPosition = function (position: GeolocationPosition) {
+    const latitude = position.coords.latitude;
+    const longitude = position.coords.longitude;
+    handleSearch(`${latitude},${longitude}`);
   };
 
   return (
@@ -87,10 +95,13 @@ export default function WeatherApp() {
         timeOfDay={timeOfDay}
         weatherType={getWeatherType(curWeatherIcon)}
       />
-      <div className="flex flex-col max-w-290 md:pt-10 gap-15 relative z-10 min-w-0">
+      <div className="flex flex-col w-full max-w-290 md:pt-10 gap-15 relative z-10 min-w-0">
         <div className="flex flex-col gap-5 md:flex-row md:justify-between items-center">
-          <SearchBar onSearch={handleSearch} />
-          <ButtonLocationSearch onSearch={handleLocation} />
+          <SearchBar onSearch={handleSearch} isDisabled={isLoading} />
+          <ButtonLocationSearch
+            onSearch={handleLocation}
+            isDisabled={isLoading}
+          />
         </div>
         {!isLoading && weather && (
           <CurrentWeather
@@ -109,7 +120,15 @@ export default function WeatherApp() {
         {textErr && <p>{textErr}</p>}
 
         {isLoading && <LoadScreen />}
+        
+        <dialog className=" m-auto p-3 open:flex flex-col gap-2 rounded-2xl border border-border bg-surface-muted" ref={errDialogref}>
+          <p>Геолокация запрещена, разрешите ее в настройках</p>
+          <button onClick={() => errDialogref.current?.close()} className="bg-primary hover:bg-primary-hover p-2 rounded-xl text-primary-foreground">Понятно</button>
+        </dialog>
+        
       </div>
     </div>
   );
 }
+
+

@@ -9,7 +9,7 @@ import { useRef } from "react";
 export default function HourlyForecast({
   hoursList,
 }: {
-  hoursList: WeatherHour[];
+  hoursList: WeatherHour[] | null;
 }) {
   const scrollingRef = useRef<HTMLDivElement | null>(null);
   const isPress = useRef(false);
@@ -63,9 +63,9 @@ export default function HourlyForecast({
         onPointerCancel={() => (isPress.current = false)}
         onLostPointerCapture={() => (isPress.current = false)}
         ref={scrollingRef}
-        className="flex gap-3 text-sky-foreground pb-4 w-full overflow-x-auto select-none cursor-grab active:cursor-grabbing"
+        className={`flex gap-3 text-sky-foreground pb-4 w-full overflow-x-auto select-none ${hoursList && "cursor-grab active:cursor-grabbing"}`}
       >
-        {hoursList.map((hour) => (
+        {hoursList? hoursList.map((hour) => (
           <div
             key={hour.datetimeEpoch}
             className="bg-surface-muted flex flex-col gap-1 p-2 rounded-2xl border border-border items-center hover:bg-surface-hover "
@@ -78,7 +78,7 @@ export default function HourlyForecast({
               {formatTemp(hour.temp)}
             </p>
           </div>
-        ))}
+        )): <div>Данные по часам не доступны :(</div>}
       </div>
     </div>
   );

@@ -27,8 +27,8 @@ export default function CurrentWeather({
 
   return (
     <div className="flex flex-col items-center gap-5 text-sky-foreground">
-      <div className="flex text-5xl items-center gap-3 ">
-        <MapPin className="size-8"/>
+      <div className="flex md:text-5xl text-xl items-center gap-3 ">
+        <MapPin className="md:size-8 size-5"/>
         <p>{formattedLocation}</p>
       </div>
 
