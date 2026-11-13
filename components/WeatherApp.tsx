@@ -20,7 +20,7 @@ export default function WeatherApp() {
   const [weather, setWeather] = useState<WeatherResponse | null>(null);
   const [textErr, setTextErr] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
-  const errCode = useRef(0);
+  const [errCode, setErrCode] = useState(0);
   const errDialogref = useRef<null | HTMLDialogElement>(null);
 
   let weatherTheme = "dark";
@@ -52,6 +52,7 @@ export default function WeatherApp() {
     const url = `/api/weather?city=${encodeURIComponent(location)}`;
 
     try {
+      setTextErr(null);
       setIsLoading(true);
       const response = await fetch(url);
 
@@ -64,7 +65,7 @@ export default function WeatherApp() {
         setWeather(data);
         setTextErr(null);
       }
-    } catch (err) {
+    } catch {
       setTextErr("Ошибка загрузки данных");
       setWeather(null);
     } finally {
@@ -77,7 +78,7 @@ export default function WeatherApp() {
 
   const errPosition = function (err: GeolocationPositionError) {
     errDialogref.current?.showModal();
-    errCode.current = err.code;
+    setErrCode(err.code);
     // console.log(`ERROR(${err.code}): ${err.message}`);
   };
 
@@ -123,7 +124,7 @@ export default function WeatherApp() {
 
         {isLoading && <LoadScreen />}
 
-        <DialogErr errDialogref={errDialogref} errCode={errCode.current} />
+        <DialogErr errDialogref={errDialogref} errCode={errCode} />
       </div>
     </div>
   );
