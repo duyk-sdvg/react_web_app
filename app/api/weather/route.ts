@@ -16,5 +16,9 @@ export async function GET(request: NextRequest) {
         { message: err.message, status: err.status },
         { status: err.status },
       );
+    return NextResponse.json(
+      { message: "Не удалось загрузить погоду. Попробуйте позже." },
+      { status: 500 },
+    );
   }
 }

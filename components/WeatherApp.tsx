@@ -3,7 +3,7 @@
 import { useRef, useState } from "react";
 import SearchBar from "./SearchBar";
 import CurrentWeather from "./CurrentWeather";
-import { ApiErr, WeatherResponse } from "@/app/types/weather";
+import { ApiErr, ApiErrorResponse, WeatherResponse } from "@/app/types/weather";
 import DailyForecast from "./DailyForecast";
 import HourlyForecast from "./HourlyForecast";
 import ButtonLocationSearch from "./ButtonLocationSearch";
@@ -18,9 +18,11 @@ import { DialogErr } from "./DialogErr";
 
 export default function WeatherApp() {
   const [weather, setWeather] = useState<WeatherResponse | null>(null);
-  const [textErr, setTextErr] = useState<string | null>(null);
+  const [apiErrResponse, setApiErrResponse] = useState<ApiErrorResponse | null>(
+    null,
+  );
   const [isLoading, setIsLoading] = useState(false);
-  const [errCode, setErrCode] = useState(0);
+  const [errCodeGeloc, setErrCodeGeloc] = useState(0);
   const errDialogref = useRef<null | HTMLDialogElement>(null);
   const requestInProgress = useRef(false);
 
@@ -53,24 +55,24 @@ export default function WeatherApp() {
     const url = `/api/weather?city=${encodeURIComponent(location)}`;
     if (requestInProgress.current) return;
     requestInProgress.current = true;
-    setTextErr(null);
+    setApiErrResponse(null);
     setIsLoading(true);
 
     try {
       const response = await fetch(url);
-      console.log(response.status, "response.status WeaAPP")
+      // console.log(response.status, "response.status WeaAPP")
       if (!response.ok) {
-        const data: ApiErr = await response.json();
-        console.log(data.status, "data.status")
-        setTextErr(data.message);
+        const data: ApiErrorResponse = await response.json();
+        // console.log(data.status, "data.status")
+        setApiErrResponse({ message: data.message, status: data.status });
         setWeather(null);
       } else {
         const data: WeatherResponse = await response.json();
         setWeather(data);
-        setTextErr(null);
+        setApiErrResponse(null);
       }
     } catch {
-      setTextErr("Ошибка загрузки данных");
+      setApiErrResponse({ message: "Ошибка загрузки данных", status: 500 });
       setWeather(null);
     } finally {
       setIsLoading(false);
@@ -83,7 +85,7 @@ export default function WeatherApp() {
 
   const errPosition = function (err: GeolocationPositionError) {
     errDialogref.current?.showModal();
-    setErrCode(err.code);
+    setErrCodeGeloc(err.code);
     // console.log(`ERROR(${err.code}): ${err.message}`);
   };
 
@@ -125,11 +127,20 @@ export default function WeatherApp() {
 
         {!isLoading && weather && <DailyForecast weatherByDay={weather.days} />}
 
-        {textErr && <p className="text-orange-600">{textErr}</p>}
+        {apiErrResponse && (
+          <div className="flex flex-col items-center gap-4 text-center bg-surface-muted p-3 rounded-2xl">
+            <p className="text-foreground  md:text-4xl text-xl">
+              {apiErrResponse.status}
+            </p>
+            <p className="text-foreground  md:text-2xl text-xl">
+              {apiErrResponse.message}
+            </p>
+          </div>
+        )}
 
         {isLoading && <LoadScreen />}
 
-        <DialogErr errDialogref={errDialogref} errCode={errCode} />
+        <DialogErr errDialogref={errDialogref} errCode={errCodeGeloc} />
       </div>
     </div>
   );
