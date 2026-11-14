@@ -3,7 +3,7 @@
 import { useRef, useState } from "react";
 import SearchBar from "./SearchBar";
 import CurrentWeather from "./CurrentWeather";
-import { ApiError, WeatherResponse } from "@/app/types/weather";
+import { ApiErr, WeatherResponse } from "@/app/types/weather";
 import DailyForecast from "./DailyForecast";
 import HourlyForecast from "./HourlyForecast";
 import ButtonLocationSearch from "./ButtonLocationSearch";
@@ -22,6 +22,7 @@ export default function WeatherApp() {
   const [isLoading, setIsLoading] = useState(false);
   const [errCode, setErrCode] = useState(0);
   const errDialogref = useRef<null | HTMLDialogElement>(null);
+  const requestInProgress = useRef(false);
 
   let weatherTheme = "dark";
   let skyBackground = "var(--sky-rain-night)";
@@ -50,15 +51,18 @@ export default function WeatherApp() {
 
   const handleSearch = async function (location: string) {
     const url = `/api/weather?city=${encodeURIComponent(location)}`;
+    if (requestInProgress.current) return;
+    requestInProgress.current = true;
+    setTextErr(null);
+    setIsLoading(true);
 
     try {
-      setTextErr(null);
-      setIsLoading(true);
       const response = await fetch(url);
-
+      console.log(response.status, "response.status WeaAPP")
       if (!response.ok) {
-        const data: ApiError = await response.json();
-        setTextErr(data.textErr);
+        const data: ApiErr = await response.json();
+        console.log(data.status, "data.status")
+        setTextErr(data.message);
         setWeather(null);
       } else {
         const data: WeatherResponse = await response.json();
@@ -70,6 +74,7 @@ export default function WeatherApp() {
       setWeather(null);
     } finally {
       setIsLoading(false);
+      requestInProgress.current = false;
     }
   };
   const handleLocation = function () {
@@ -120,7 +125,7 @@ export default function WeatherApp() {
 
         {!isLoading && weather && <DailyForecast weatherByDay={weather.days} />}
 
-        {textErr && <p>{textErr}</p>}
+        {textErr && <p className="text-orange-600">{textErr}</p>}
 
         {isLoading && <LoadScreen />}
 

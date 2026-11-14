@@ -32,6 +32,11 @@ export interface CurrentConditions {
   sunsetEpoch: number;
 }
 
-export interface ApiError {
-  textErr: string;
+export class ApiErr extends Error{
+  status
+  constructor(message:string, status:number){
+    super(message)
+    this.name = "ApiErr"
+    this.status = status
+  }
 }
