@@ -3,7 +3,7 @@
 import { useRef, useState } from "react";
 import SearchBar from "./SearchBar";
 import CurrentWeather from "./CurrentWeather";
-import { ApiErr, ApiErrorResponse, WeatherResponse } from "@/app/types/weather";
+import { ApiErrorResponse, WeatherResponse } from "@/app/types/weather";
 import DailyForecast from "./DailyForecast";
 import HourlyForecast from "./HourlyForecast";
 import ButtonLocationSearch from "./ButtonLocationSearch";
@@ -53,18 +53,29 @@ export default function WeatherApp() {
 
   const handleSearch = async function (location: string) {
     const url = `/api/weather?city=${encodeURIComponent(location)}`;
+
     if (requestInProgress.current) return;
+
+    const controller = new AbortController();
+    const signalController = controller.signal;
+    let isTimeOut = false;
+
     requestInProgress.current = true;
     setApiErrResponse(null);
     setIsLoading(true);
 
+    const timerId = setTimeout(() => {
+      controller.abort();
+      isTimeOut = true;
+    }, 15000);
+
     try {
-      const response = await fetch(url);
-      // console.log(response.status, "response.status WeaAPP")
+      const response = await fetch(url, { signal: signalController });
+
       if (!response.ok) {
         const data: ApiErrorResponse = await response.json();
-        // console.log(data.status, "data.status")
-        setApiErrResponse({ message: data.message, status: data.status });
+
+        setApiErrResponse({ message: data.message, status: response.status });
         setWeather(null);
       } else {
         const data: WeatherResponse = await response.json();
@@ -72,15 +83,17 @@ export default function WeatherApp() {
         setApiErrResponse(null);
       }
     } catch {
-      setApiErrResponse({ message: "Ошибка загрузки данных", status: 500 });
+      if(isTimeOut) setApiErrResponse({ message: "Превышено время запроса, повторите попытку", status: 500 });
+      else setApiErrResponse({ message: "Ошибка загрузки данных", status: 500 });
       setWeather(null);
     } finally {
+      clearTimeout(timerId);
       setIsLoading(false);
       requestInProgress.current = false;
     }
   };
   const handleLocation = function () {
-    navigator.geolocation.getCurrentPosition(getPosition, errPosition);
+    navigator.geolocation.getCurrentPosition(getPosition, errPosition, {timeout: 10000});
   };
 
   const errPosition = function (err: GeolocationPositionError) {
