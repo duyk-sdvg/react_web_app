@@ -32,8 +32,13 @@ export interface CurrentConditions {
   sunsetEpoch: number;
 }
 
+export interface Location {
+  city: string;
+  locality: string;
+}
+
 export interface ApiErrorResponse {
-  status: number;
+  status?: number;
   message: string;
 }
 

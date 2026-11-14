@@ -3,7 +3,7 @@
 import { useRef, useState } from "react";
 import SearchBar from "./SearchBar";
 import CurrentWeather from "./CurrentWeather";
-import { ApiErrorResponse, WeatherResponse } from "@/app/types/weather";
+import { ApiErr, ApiErrorResponse, WeatherResponse } from "@/app/types/weather";
 import DailyForecast from "./DailyForecast";
 import HourlyForecast from "./HourlyForecast";
 import ButtonLocationSearch from "./ButtonLocationSearch";
@@ -15,6 +15,7 @@ import { getWeatherType } from "@/app/utils/getWeatherType";
 import { getNext24Hours } from "@/app/utils/getNext24HoursWeather";
 import { LoadScreen } from "./LoadScreen";
 import { DialogErr } from "./DialogErr";
+import { getLocationFromCoords } from "@/app/utils/getLocationFromCoords";
 
 export default function WeatherApp() {
   const [weather, setWeather] = useState<WeatherResponse | null>(null);
@@ -83,8 +84,12 @@ export default function WeatherApp() {
         setApiErrResponse(null);
       }
     } catch {
-      if(isTimeOut) setApiErrResponse({ message: "Превышено время запроса, повторите попытку", status: 500 });
-      else setApiErrResponse({ message: "Ошибка загрузки данных", status: 500 });
+      if (isTimeOut)
+        setApiErrResponse({
+          message: "Превышено время запроса, повторите попытку",
+        });
+      else
+        setApiErrResponse({ message: "Ошибка загрузки данных", status: 500 });
       setWeather(null);
     } finally {
       clearTimeout(timerId);
@@ -93,7 +98,9 @@ export default function WeatherApp() {
     }
   };
   const handleLocation = function () {
-    navigator.geolocation.getCurrentPosition(getPosition, errPosition, {timeout: 10000});
+    navigator.geolocation.getCurrentPosition(getPosition, errPosition, {
+      timeout: 10000,
+    });
   };
 
   const errPosition = function (err: GeolocationPositionError) {
@@ -102,10 +109,24 @@ export default function WeatherApp() {
     // console.log(`ERROR(${err.code}): ${err.message}`);
   };
 
-  const getPosition = function (position: GeolocationPosition) {
+  const getPosition = async function (position: GeolocationPosition) {
     const latitude = position.coords.latitude;
     const longitude = position.coords.longitude;
-    handleSearch(`${latitude},${longitude}`);
+    try {
+      let { locality, city } = await getLocationFromCoords(
+        latitude,
+        longitude,
+      );
+      locality = locality.trim()
+      city = city.trim()
+      if(locality.length + city.length === 0) throw new Error("После геокодирования пришли пустые значения locality и city")
+      const listLocation = [city, locality]
+      const filterSetLocation = new Set(listLocation.filter((location)=>location.length > 0))
+      handleSearch([...filterSetLocation].join(", "));
+      
+    } catch {
+      handleSearch(`${latitude},${longitude}`);
+    }
   };
 
   return (
